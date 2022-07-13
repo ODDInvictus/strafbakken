@@ -1,0 +1,19 @@
+{
+  "name": "strafbakken",
+  "version": "1.0.0",
+  "description": "Strafbakken systeem voor invictus",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "invictus"
+  ],
+  "author": "Naut de Vroome",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1"
+  }
+}
