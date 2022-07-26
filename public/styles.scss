@@ -52,6 +52,10 @@ body {
             cursor: pointer;
             transform: translateY(-6px);
             
+            ::selection {
+               background: none;
+            }
+            
             p {
                font-size: 50px;
             }
