@@ -30,35 +30,44 @@ function getData() {
          location.reload();
       }
    })
-   .catch( error => {throw error});
+   .catch( console.error );
 }
 
 function viewBakken(data) {
    $('main')[0].innerHTML = '';
    data.forEach( person => {
-      let div = $('<div>', {class: 'row'});
-
-      let buttons = $('<div>', {class: 'buttons'});
-      let plus = $('<p>', {
-         onclick: `addBak('${person.name}')`
-      }).text('+');
-      let min = $('<p>', {
-         class: 'min',
-         onclick: `removeBak('${person.name}')`
-      }).text('-');
-
-      let name = $('<p>').text(person.name);
-      let bakken = $('<p>').text(person.bakken);
-
-      buttons.append(plus);
-      buttons.append(min);
-
-      div.append(buttons);
-      div.append(name);
-      div.append(bakken);
-
+      const div = createPerson(person);
       $('main').append(div);
    })
+}
+
+function createPerson(person) {
+   let div = $('<div>', {
+      class: 'row'
+   });
+
+   let buttons = $('<div>', {class: 'buttons'});
+   let plus = $('<p>', {
+      onclick: `addBak('${person.name}')`
+   }).text('+');
+   let min = $('<p>', {
+      class: 'min',
+      onclick: `removeBak('${person.name}')`
+   }).text('-');
+
+   let name = $('<p>').text(person.name);
+   let bakken = $('<p>', {
+      id: person.name
+   }).text(person.bakken);
+
+   buttons.append(plus);
+   buttons.append(min);
+
+   div.append(buttons);
+   div.append(name);
+   div.append(bakken);
+
+   return div;
 }
 
 function addBak(name) {
@@ -70,8 +79,10 @@ function addBak(name) {
          name: name
       }
    })
-   .catch( error => {throw error});
-   location.reload();
+   .then( _ => {
+      $(`#${name}`).text(Number($(`#${name}`).text()) + 1);
+   })
+   .catch(console.error);
 }
 
 function removeBak(name) {
@@ -83,6 +94,8 @@ function removeBak(name) {
          name: name
       }
    })
-   .catch( error => {throw error});
-   location.reload();
+   .then( _ => {
+      $(`#${name}`).text(Number($(`#${name}`).text()) - 1);
+   })
+   .catch(console.error);
 }

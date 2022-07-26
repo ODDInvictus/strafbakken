@@ -1,7 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const mysql = require('mysql');
-const bodyParser = require('body-parser');
 
 dotenv.config();
 
@@ -20,7 +19,6 @@ db.connect( (error) => {
 
 // Routes
 const app = express();
-app.use(bodyParser.json());
 
 app.use('/', express.static('public'));
 
@@ -61,5 +59,5 @@ app.delete('/bakken', (req, res) => {
 })
 
 // Listen
-app.listen(process.env.PORT || 8080);
+app.listen(8080);
 console.log('Listening...');
