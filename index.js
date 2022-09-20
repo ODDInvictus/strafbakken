@@ -1,19 +1,19 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 
 dotenv.config();
 
 // Database
 const db = mysql.createConnection({
-   host: 'nautdevroome.nl',
-   user: 'nautdevr_admin',
-   password: process.env.DB_PASS,
-   database: 'nautdevr_strafbakken'
+   host: process.env.DBIP,
+   user: process.env.DBUSER,
+   password: process.env.DBPASS,
+   database: 'strafbakken'
 });
 
 db.connect( (error) => {
-   if (error) throw error;
+   if (error) console.error;
    console.log('Connect to the database');
 })
 
@@ -26,7 +26,7 @@ app.get('/bakken', (req, res) => {
    if (req.headers.token == process.env.INLOG_PASS) {
       const query = 'SELECT * FROM strafbakken';
       db.query(query, (error, results) => {
-         if (error) throw error;
+         if (error) console.error;
          res.send(JSON.stringify(results));
       })
    } else {
@@ -38,7 +38,7 @@ app.post('/bakken', (req, res) => {
    if (req.headers.token == process.env.INLOG_PASS) {
       const query = 'UPDATE strafbakken SET bakken = bakken + 1 WHERE name = ?';
       db.query(query, [req.headers.name], (error) => {
-         if (error) throw error;
+         if (error) console.error;
          res.sendStatus(200);
       })
    } else {
@@ -50,7 +50,7 @@ app.delete('/bakken', (req, res) => {
    if (req.headers.token == process.env.INLOG_PASS) {
       const query = 'UPDATE strafbakken SET bakken = bakken - 1 WHERE name = ?';
       db.query(query, [req.headers.name], (error) => {
-         if (error) throw error;
+         if (error) console.error;
          res.sendStatus(200);
       })
    } else {
@@ -59,5 +59,5 @@ app.delete('/bakken', (req, res) => {
 })
 
 // Listen
-app.listen(8080);
+app.listen(process.env.PORT || 8080);
 console.log('Listening...');
