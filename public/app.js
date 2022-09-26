@@ -4,13 +4,26 @@ $(document).ready( _ => {
    if (token === '') { 
       $('#login').click( _ => {
          token = $('#pass')[0].value;
-         localStorage.setItem('token', token);
-         getData();
+         hash(token).then( hashedToken => {
+            localStorage.setItem('token', hashedToken);
+            getData();
+         });
       });
    } else {
       getData();
    }
 });
+
+function hash(string) {
+   const utf8 = new TextEncoder().encode(string);
+   return crypto.subtle.digest('SHA-256', utf8).then((hashBuffer) => {
+     const hashArray = Array.from(new Uint8Array(hashBuffer));
+     const hashHex = hashArray
+       .map((bytes) => bytes.toString(16).padStart(2, '0'))
+       .join('');
+     return hashHex;
+   });
+ }
 
 function getData() {
    fetch('/bakken/', {
