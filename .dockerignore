@@ -1,1 +1,6 @@
-node_modules
+/node_modules
+/public/styles.css.map
+/public/styles.scss
+.gitignore
+env.example
+README.md

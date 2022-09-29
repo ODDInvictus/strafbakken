@@ -5,6 +5,7 @@ $(document).ready( _ => {
       $('#login').click( _ => {
          token = $('#pass')[0].value;
          hash(token).then( hashedToken => {
+            token = hashedToken;
             localStorage.setItem('token', hashedToken);
             getData();
          });

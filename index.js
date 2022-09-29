@@ -13,14 +13,13 @@ const conn = mysql.createConnection({
 });
 
 function db_connect() {
-   conn.connect( (error) => {
-      if (error) {
-         console.error(error);
-      } else {
-         console.log('Connected to the database');
-      }
+   conn.connect( error => {
+      if (error) throw error;
+      console.log("Connected to the database");
    });
 }
+
+db_connect();
 
 // Routes
 const app = express();
@@ -81,8 +80,6 @@ app.delete('/bakken', (req, res) => {
 })
 
 // Listen
-db_connect();
-
 const port = process.env.PORT || 8080;
 app.listen(port);
 console.log(`Listening on port ${port}...`);
