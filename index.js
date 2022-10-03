@@ -5,12 +5,23 @@ const mysql = require('mysql2');
 dotenv.config();
 
 // Database
-const conn = mysql.createConnection({
-   host: process.env.DBIP,
-   user: process.env.DBUSER,
-   password: process.env.DBPASS,
-   database: 'strafbakken'
-});
+function connect_db() {
+   const connection = mysql.createConnection({
+      host: process.env.DBIP,
+      user: process.env.DBUSER,
+      password: process.env.DBPASS,
+      database: 'strafbakken'
+   });
+   
+   connection.connect( error => {
+      if (error) {
+         console.error(error);
+         return res.statusStatus(500);
+      }
+   });
+
+   return connection;
+}
 
 // Routes
 const app = express();
@@ -21,12 +32,7 @@ app.get('/bakken', (req, res) => {
    if (req.headers.token == process.env.INLOG_PASS) {
 
       // Make db connection
-      conn.connect( error => {
-         if (error) {
-            console.error(error);
-            return res.statusStatus(500);
-         }
-      });
+      const conn = connect_db();
 
       // Query
       const query = 'SELECT * FROM strafbakken';
@@ -50,12 +56,7 @@ app.post('/bakken', (req, res) => {
    if (req.headers.token == process.env.INLOG_PASS) {
 
       // Make db connection
-      conn.connect( error => {
-         if (error) {
-            console.error(error);
-            return res.statusStatus(500);
-         }
-      });
+      const conn = connect_db();
 
       // Query
       const query = 'UPDATE strafbakken SET bakken = bakken + 1 WHERE name = ?';
@@ -79,12 +80,7 @@ app.delete('/bakken', (req, res) => {
    if (req.headers.token == process.env.INLOG_PASS) {
 
       // Make db connection
-      conn.connect( error => {
-         if (error) {
-            console.error(error);
-            return res.statusStatus(500);
-         }
-      });
+      const conn = connect_db();
 
       // Query
       const query = 'UPDATE strafbakken SET bakken = bakken - 1 WHERE name = ?';
