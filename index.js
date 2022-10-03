@@ -12,15 +12,6 @@ const conn = mysql.createConnection({
    database: 'strafbakken'
 });
 
-function db_connect() {
-   conn.connect( error => {
-      if (error) throw error;
-      console.log("Connected to the database");
-   });
-}
-
-db_connect();
-
 // Routes
 const app = express();
 
@@ -29,23 +20,27 @@ app.use('/', express.static('public'));
 app.get('/bakken', (req, res) => {
    if (req.headers.token == process.env.INLOG_PASS) {
 
-      // Check if db connection is still alive
-      conn.ping( err => {
-         if (err) {
-            conn.end();
-            db_connect();
+      // Make db connection
+      conn.connect( error => {
+         if (error) {
+            console.error(error);
+            return res.statusStatus(500);
          }
       });
 
+      // Query
       const query = 'SELECT * FROM strafbakken';
       conn.query(query, (error, results) => {
          if (error) {
             console.error(error);
             res.sendStatus(500);
+            conn.destroy();
          } else {
             res.send(JSON.stringify(results));
+            conn.end();
          }
-      })
+      });
+
    } else {
       res.sendStatus(403);
    }
@@ -53,15 +48,28 @@ app.get('/bakken', (req, res) => {
 
 app.post('/bakken', (req, res) => {
    if (req.headers.token == process.env.INLOG_PASS) {
+
+      // Make db connection
+      conn.connect( error => {
+         if (error) {
+            console.error(error);
+            return res.statusStatus(500);
+         }
+      });
+
+      // Query
       const query = 'UPDATE strafbakken SET bakken = bakken + 1 WHERE name = ?';
       conn.query(query, [req.headers.name], (error) => {
          if (error) {
             console.error(error);
             res.sendStatus(500);
+            conn.destroy();
          } else {
             res.sendStatus(200);
+            conn.end();
          }
-      })
+      });
+
    } else {
       res.sendStatus(403);
    }
@@ -69,11 +77,28 @@ app.post('/bakken', (req, res) => {
 
 app.delete('/bakken', (req, res) => {
    if (req.headers.token == process.env.INLOG_PASS) {
+
+      // Make db connection
+      conn.connect( error => {
+         if (error) {
+            console.error(error);
+            return res.statusStatus(500);
+         }
+      });
+
+      // Query
       const query = 'UPDATE strafbakken SET bakken = bakken - 1 WHERE name = ?';
       conn.query(query, [req.headers.name], (error) => {
-         if (error) console.error;
-         res.sendStatus(200);
-      })
+         if (error) {
+            console.error(error);
+            res.sendStatus(500);
+            conn.destroy();
+         } else {
+            res.sendStatus(200);
+            conn.end();
+         }
+      });
+
    } else {
       res.sendStatus(403);
    }
